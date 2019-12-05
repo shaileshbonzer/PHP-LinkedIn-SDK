@@ -11,11 +11,12 @@ class LinkedIn
     private $_debug_info = null;
     private $_curl_handle = null;
 
-    const API_BASE = 'https://api.linkedin.com/v1';
-    const OAUTH_BASE = 'https://www.linkedin.com/uas/oauth2';
+    const API_BASE = 'https://api.linkedin.com/v2';
+    const OAUTH_BASE = 'https://www.linkedin.com/oauth/v2';
 
     const SCOPE_BASIC_PROFILE = 'r_basicprofile'; // Name, photo, headline, and current positions
     const SCOPE_FULL_PROFILE = 'r_fullprofile'; // Full profile including experience, education, skills, and recommendations
+    const SCOPE_LITE_PROFILE = 'r_liteprofile'; // Lite profile
     const SCOPE_EMAIL_ADDRESS = 'r_emailaddress'; // The primary email address you use for your LinkedIn account
     const SCOPE_NETWORK = 'r_network'; // Your 1st and 2nd degree connections
     const SCOPE_CONTACT_INFO = 'r_contactinfo'; // Address, phone number, and bound accounts
@@ -24,6 +25,11 @@ class LinkedIn
     const SCOPE_READ_WRITE_COMPANY_ADMIN = 'rw_company_admin'; // Administers a company as you
     const SCOPE_WRITE_MESSAGES = 'w_messages'; // Send messages and invitations to connect as you
     const SCOPE_WRITE_SHARE = 'w_share'; // Share url to your contacts
+
+    const SCOPE_MEMBER_SOCIAL = 'w_member_social';
+    const SCOPE_READ_WRITE_ORGANIZATION_ADMIN = 'rw_organization_admin'; // Administers an organization as you
+    const SCOPE_READ_ORGANIZATION_SOCIAL = 'r_organization_social';
+    const SCOPE_WRITE_ORGANIZATION_SOCIAL = 'W_organization_social';
 
     const HTTP_METHOD_GET = 'GET';
     const HTTP_METHOD_POST = 'POST';
@@ -239,9 +245,10 @@ class LinkedIn
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
         $concat = (stristr($endpoint,'?') ? '&' : '?');
-        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat;
+        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat.'oauth2_access_token=' . $this->getAccessToken();
+
         $headers[] = 'x-li-format: json';
-        $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
+        $headers[] = 'X-RestLi-Protocol-Version: 2.0.0';
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
     }
@@ -293,11 +300,11 @@ class LinkedIn
         }
 
         if (!empty($curl_options)) {
-            $options = array_replace($options, $curl_options);
+            $options = array_merge_recursive($options, $curl_options);
         }
 
         if (isset($this->_config['curl_options']) && !empty($this->_config['curl_options'])) {
-            $options = array_replace($options, $this->_config['curl_options']);
+            $options = array_merge_recursive($options, $this->_config['curl_options']);
         }
 
         curl_setopt_array($ch, $options);
@@ -309,6 +316,7 @@ class LinkedIn
         }
 
         $response = json_decode($response, true);
+
         if (isset($response['status']) && ($response['status'] < 200 || $response['status'] > 300)) {
             throw new \RuntimeException('Request Error: ' . $response['message'] . '. Raw Response: ' . print_r($response, true));
         }
