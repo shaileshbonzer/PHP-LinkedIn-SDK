@@ -1,15 +1,26 @@
 {
-    "name": "linkedinapi/linkedin",
+    "name": "shaileshbonzer/linkedin",
     "type": "library",
     "description": "PHP LinkedIn SDK",
     "keywords": ["linkedin","rest","api","api client"],
-    "homepage": "https://github.com/ashwinks/PHP-LinkedIn-SDK",
+    "homepage": "https://github.com/shaileshbonzer/PHP-LinkedIn-SDK",
     "license": "MIT",
     "authors": [
         {
             "name": "Ashwin Surajbali",
             "email": "ashwin@redinkdesign.net",
             "homepage": "http://www.redinkdesign.co"
+        },
+        {
+            "name": "Shailesh",
+            "email": "shailesh.bonzer@gmail.com",
+            "homepage": "https://github.com/shaileshbonzer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/shaileshbonzer/PHP-LinkedIn-SDK"
         }
     ],
     "require": {
