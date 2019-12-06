@@ -1,5 +1,3 @@
-**** Would someone like to take over this project? Unfortunatley I haven't worked on any projects that require LinkedIn data in a couple years. Because of that, it's hard to find the time to test pull requests and keep up to date w/ LI's API. ****
-
 PHP-LinkedIn-SDK
 ================
 
@@ -24,9 +22,8 @@ Get the login URL - this accepts an array of SCOPES
 ```php
 $url = $li->getLoginUrl(
   array(
-    LinkedIn::SCOPE_BASIC_PROFILE, 
-    LinkedIn::SCOPE_EMAIL_ADDRESS, 
-    LinkedIn::SCOPE_NETWORK
+    LinkedIn::SCOPE_LITE_PROFILE, 
+    LinkedIn::SCOPE_EMAIL_ADDRESS,     
   )
 );
 ```
