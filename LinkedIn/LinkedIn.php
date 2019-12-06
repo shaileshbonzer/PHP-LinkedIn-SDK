@@ -245,10 +245,9 @@ class LinkedIn
     public function fetch($endpoint, array $payload = array(), $method = 'GET', array $headers = array(), array $curl_options = array())
     {
         $concat = (stristr($endpoint,'?') ? '&' : '?');
-        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat.'oauth2_access_token=' . $this->getAccessToken();
+        $endpoint = self::API_BASE . '/' . trim($endpoint, '/\\') . $concat;
 
-        $headers[] = 'x-li-format: json';
-        $headers[] = 'X-RestLi-Protocol-Version: 2.0.0';
+        $headers[] = 'Authorization: Bearer ' . $this->getAccessToken();
 
         return $this->_makeRequest($endpoint, $payload, $method, $headers, $curl_options);
     }
@@ -293,6 +292,8 @@ class LinkedIn
                 $options[CURLOPT_POSTFIELDS] = json_encode($payload);
                 $headers[] = 'Content-Length: ' . strlen($options[CURLOPT_POSTFIELDS]);
                 $headers[] = 'Content-Type: application/json';
+                $headers[] = 'x-li-format: json';
+                $headers[] = 'X-RestLi-Protocol-Version: 2.0.0';
                 $options[CURLOPT_HTTPHEADER] = $headers;
             } else {
                 $options[CURLOPT_URL] .= '&' . http_build_query($payload, '&');
