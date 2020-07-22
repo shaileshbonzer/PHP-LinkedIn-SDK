@@ -110,7 +110,8 @@ class LinkedIn
         /** Temp bug fix as per https://developer.linkedin.com/comment/28938#comment-28938 **/
         $tmp_params = http_build_query($params);
 
-        $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken?' . $tmp_params, array(), self::HTTP_METHOD_POST, array('x-li-format: json'));
+        $data = $this->_makeRequest(self::OAUTH_BASE . '/accessToken?' . $tmp_params, array(), self::HTTP_METHOD_POST, array('x-li-format: json','Content-Length:0'));
+
         if (isset($data['error']) && !empty($data['error'])) {
             throw new \RuntimeException('Access Token Request Error: ' . $data['error'] . ' -- ' . $data['error_description']);
         }
